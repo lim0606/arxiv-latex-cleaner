@@ -21,6 +21,7 @@ import re
 import shutil
 import subprocess
 
+
 from PIL import Image
 
 PDF_RESIZE_COMMAND = ('gs -sDEVICE=pdfwrite -dCompatibilityLevel=1.4 -dNOPAUSE '
@@ -103,6 +104,13 @@ def _remove_command(text, command):
                 '', text)
 
 
+def _remove_answer_command(text, command):
+  if text.find("\Answer{") >= 0:
+    return text[:text.find("\Answer{")] + "\\Answer{\n}"
+  else:
+    return text
+
+
 def _remove_environment(text, environment):
   """Removes '\\begin{environment}*\\end{environment}' from 'text'."""
   return re.sub(
@@ -143,7 +151,10 @@ def _read_remove_comments_and_write_file(filename, parameters):
   content = [_remove_comments_inline(line) for line in content]
   content = _remove_environment(''.join(content), 'comment')
   for command in parameters['commands_to_delete']:
-    content = _remove_command(content, command)
+    if command == 'Answer':
+      content = _remove_answer_command(content, command)
+    else:
+      content = _remove_command(content, command)
   _write_file_content(content,
                       os.path.join(parameters['output_folder'], filename))
 
