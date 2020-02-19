@@ -322,12 +322,16 @@ def _create_out_folder(input_folder):
 
 def run_arxiv_cleaner(parameters):
   """Core of the code, runs the actual arXiv cleaner."""
+  to_delete = [
+      '.aux$', '.sh$', '.bib$', '.blg$', '.brf$', '.log$', '.out$', '.ps$',
+      '.dvi$', '.synctex.gz$', '~$', '.backup$', '.gitignore$',
+      '.DS_Store$', '.svg$', '^.idea'
+  ]
+  for ext_not_to_delete in parameters['exts_whitelist']:
+    if ext_not_to_delete in to_delete:
+      to_delete.remove(ext_not_to_delete)
   parameters.update({
-      'to_delete': [
-          '.aux$', '.sh$', '.bib$', '.blg$', '.brf$', '.log$', '.out$', '.ps$',
-          '.dvi$', '.synctex.gz$', '~$', '.backup$', '.gitignore$',
-          '.DS_Store$', '.svg$', '^.idea'
-      ],
+      'to_delete': to_delete,
       'figures_to_copy_if_referenced': ['.png$', '.jpg$', '.jpeg$', '.pdf$']
   })
 

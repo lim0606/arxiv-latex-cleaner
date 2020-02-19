@@ -62,6 +62,16 @@ PARSER.add_argument(
 )
 
 PARSER.add_argument(
+    "--exts_whitelist",
+    nargs="+",
+    default=[],
+    required=False,
+    help=(
+        "whitelist files with the specified extensions"
+    ),
+)
+
+PARSER.add_argument(
     "--compress_pdf",
     action="store_true",
     help="Compress PDF images using ghostscript (Linux and Mac only).",
